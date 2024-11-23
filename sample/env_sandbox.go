@@ -10,7 +10,7 @@ const (
 	EnvSandboxName = "sandbox"
 )
 
-func Sandbox(log *slog.Logger) (env *config.EnvConfig) {
+func SandboxEnvironment(log *slog.Logger) (env *config.EnvConfig) {
 	env = config.NewEnvConfig(
 		"EnvSandboxName",
 		"The sandbox is ideal for developers to test and integrate new features",

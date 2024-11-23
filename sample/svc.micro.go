@@ -6,7 +6,7 @@ import (
 	"github.com/blueorb/config/config"
 )
 
-func MicroServiceConfig(log *slog.Logger) (svc *config.SvcConfig) {
+func MicroService(log *slog.Logger) (svc *config.SvcConfig) {
 	return config.NewConfig(
 		log,
 		"mirco",

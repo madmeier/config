@@ -34,7 +34,7 @@ func generateOptions(log *slog.Logger, p *config.ProbeOptions) (opts string) {
 func generateK8SDeployment(log *slog.Logger, c *config.SvcConfig) (cfgMap string) {
 	cfgMap = fmt.Sprintf(
 		k8sDeploymentBaseTemplate,
-		c.ServiceName(),
+		c.Name(),
 		c.Namespace(),
 		c.Port(),
 		c.Image(),
