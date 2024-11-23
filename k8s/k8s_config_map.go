@@ -1,11 +1,16 @@
-package k8sconfig
+package k8s
 
-import "fmt"
+import (
+	"fmt"
+	"log/slog"
 
-func (c *svcConfig) generateK8SConfigMap() (cfgMap string) {
-	cfgMap = fmt.Sprintf(k8sConfigMapBaseTemplate, c.k8sServiceConfigName(), c.namespace)
+	"github.com/blueorb/config/config"
+)
 
-	for k, v := range c.environmentVariables {
+func generateK8SConfigMap(log *slog.Logger, c *config.SvcConfig) (cfgMap string) {
+	cfgMap = fmt.Sprintf(k8sConfigMapBaseTemplate, k8sServiceConfigName(c), c.Namespace())
+
+	for k, v := range c.EnvironmentVariables() {
 		cfgMap += fmt.Sprintf(k8sConfigMapEnvVarTemplate, k, v)
 	}
 

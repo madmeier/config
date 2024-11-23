@@ -1,9 +1,14 @@
-package k8sconfig
+package k8s
 
-import "fmt"
+import (
+	"fmt"
+	"log/slog"
 
-func (c *svcConfig) generateK8SService() (service string) {
-	service = fmt.Sprintf(k8sServiceBaseTemplate, c.k8sServiceName(), c.namespace, c.port, c.k8sAppName())
+	"github.com/blueorb/config/config"
+)
+
+func generateK8SService(log *slog.Logger, c *config.SvcConfig) (service string) {
+	service = fmt.Sprintf(k8sServiceBaseTemplate, k8sServiceName(c), c.Namespace(), c.Port, k8sAppName(c))
 
 	return
 }

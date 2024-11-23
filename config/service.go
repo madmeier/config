@@ -1,8 +1,8 @@
-package k8sconfig
+package config
 
 import "log/slog"
 
-type ConfigOption func(*svcConfig)
+type ConfigOption func(*SvcConfig)
 
 type ProbeOptions struct {
 	// Number of seconds after the container has started before startup, liveness or readiness probes are initiated.
@@ -33,7 +33,7 @@ type ProbeOptions struct {
 	TerminationGracePeriodSeconds int32
 }
 
-type svcConfig struct {
+type SvcConfig struct {
 	// name of the service
 	serviceName string
 	port        int32 // required
@@ -55,26 +55,78 @@ type svcConfig struct {
 	startupProbeOptions   *ProbeOptions
 }
 
+func (c *SvcConfig) ServiceName() string {
+	return c.serviceName
+}
+
+func (c *SvcConfig) Port() int32 {
+	return c.port
+}
+
+func (c *SvcConfig) Environment() string {
+	return c.environment
+}
+
+func (c *SvcConfig) Namespace() string {
+	return c.namespace
+}
+
+func (c *SvcConfig) ServiceAccount() string {
+	return c.serviceAccount
+}
+
+func (c *SvcConfig) Image() string {
+	return c.image
+}
+
+func (c *SvcConfig) EnvironmentVariables() map[string]string {
+	return c.environmentVariables
+}
+
+func (c *SvcConfig) ReadinessProbe() bool {
+	return c.readinessProbe
+}
+
+func (c *SvcConfig) ReadinessProbeOptions() *ProbeOptions {
+	return c.readinessProbeOptions
+}
+
+func (c *SvcConfig) LivenessProbe() bool {
+	return c.livenessProbe
+}
+
+func (c *SvcConfig) LivenessProbeOptions() *ProbeOptions {
+	return c.livenessProbeOptions
+}
+
+func (c *SvcConfig) StartupProbe() bool {
+	return c.startupProbe
+}
+
+func (c *SvcConfig) StartupProbeOptions() *ProbeOptions {
+	return c.startupProbeOptions
+}
+
 func WithEnvironmentVariable(name string, defaultValue string) ConfigOption {
-	return func(s *svcConfig) {
+	return func(s *SvcConfig) {
 		s.environmentVariables[name] = defaultValue
 	}
 }
 
 func WithNamespace(namespace string) ConfigOption {
-	return func(s *svcConfig) {
+	return func(s *SvcConfig) {
 		s.namespace = namespace
 	}
 }
 
 func WithServiceAccount(serviceAccount string) ConfigOption {
-	return func(s *svcConfig) {
+	return func(s *SvcConfig) {
 		s.serviceAccount = serviceAccount
 	}
 }
 
 func WithReadinessProbe(probeOptions ...ProbeOptions) ConfigOption {
-	return func(s *svcConfig) {
+	return func(s *SvcConfig) {
 		s.readinessProbe = true
 		if len(probeOptions) > 0 {
 			s.readinessProbeOptions = &probeOptions[0]
@@ -83,7 +135,7 @@ func WithReadinessProbe(probeOptions ...ProbeOptions) ConfigOption {
 }
 
 func WithLivenessProbe(probeOptions ...ProbeOptions) ConfigOption {
-	return func(s *svcConfig) {
+	return func(s *SvcConfig) {
 		s.livenessProbe = true
 		if len(probeOptions) > 0 {
 			s.livenessProbeOptions = &probeOptions[0]
@@ -92,7 +144,7 @@ func WithLivenessProbe(probeOptions ...ProbeOptions) ConfigOption {
 }
 
 func WithStartupProbe(probeOptions ...ProbeOptions) ConfigOption {
-	return func(s *svcConfig) {
+	return func(s *SvcConfig) {
 		s.startupProbe = true
 		if len(probeOptions) > 0 {
 			s.startupProbeOptions = &probeOptions[0]
@@ -101,13 +153,13 @@ func WithStartupProbe(probeOptions ...ProbeOptions) ConfigOption {
 }
 
 func WithSvcImage(image string) ConfigOption {
-	return func(s *svcConfig) {
+	return func(s *SvcConfig) {
 		s.image = image
 	}
 }
 
-func getDefaultsvcConfig(serviceName string, servicePort int32, imageName string) *svcConfig {
-	return &svcConfig{
+func getDefaultSvcConfig(serviceName string, servicePort int32, imageName string) *SvcConfig {
+	return &SvcConfig{
 		serviceName:          serviceName,
 		port:                 servicePort,
 		environment:          "sb",
@@ -125,30 +177,20 @@ func extractServiceOptions(
 	imageName string,
 	options ...ConfigOption,
 ) (
-	svcConfig *svcConfig,
+	SvcConfig *SvcConfig,
 ) {
 	log.Info("extracting config options", "number of options", len(options))
 
-	svcConfig = getDefaultsvcConfig(serviceName, servicePort, imageName)
+	SvcConfig = getDefaultSvcConfig(serviceName, servicePort, imageName)
 	for _, opt := range options {
-		opt(svcConfig)
+		opt(SvcConfig)
 	}
 
 	return
 }
 
-func NewConfig(log *slog.Logger, serviceName string, servicePort int32, imageName string, options ...ConfigOption) (config *svcConfig) {
+func NewConfig(log *slog.Logger, serviceName string, servicePort int32, imageName string, options ...ConfigOption) (config *SvcConfig) {
 	config = extractServiceOptions(log, serviceName, servicePort, imageName, options...)
-	log.Info("config options", "svcConfig", config)
+	log.Info("config options", "SvcConfig", config)
 	return
-}
-
-// generate the kubernetes deployment yaml
-func (c *svcConfig) generateKubernetes() string {
-	return "kubernetes"
-}
-
-// generate the go config file
-func (c *svcConfig) generateGo() string {
-	return "go"
 }

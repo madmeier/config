@@ -1,8 +1,13 @@
-package k8sconfig
+package k8s
 
-import "fmt"
+import (
+	"fmt"
+	"log/slog"
 
-func (p *ProbeOptions) generateOptions() (opts string) {
+	"github.com/blueorb/config/config"
+)
+
+func generateOptions(log *slog.Logger, p *config.ProbeOptions) (opts string) {
 	if p == nil {
 		return
 	}
@@ -26,22 +31,32 @@ func (p *ProbeOptions) generateOptions() (opts string) {
 	return
 }
 
-func (c *svcConfig) generateK8SDeployment() (cfgMap string) {
-	cfgMap = fmt.Sprintf(k8sDeploymentBaseTemplate, c.serviceName, c.namespace, c.port, c.image, c.serviceAccount, c.k8sAppName(), c.k8sSvcDeploymentName(), c.k8sSvcContainerName())
+func generateK8SDeployment(log *slog.Logger, c *config.SvcConfig) (cfgMap string) {
+	cfgMap = fmt.Sprintf(
+		k8sDeploymentBaseTemplate,
+		c.ServiceName(),
+		c.Namespace(),
+		c.Port(),
+		c.Image(),
+		c.ServiceAccount(),
+		k8sAppName(c),
+		k8sSvcDeploymentName(c),
+		k8sSvcContainerName(c),
+	)
 
-	if c.livenessProbe {
-		cfgMap += fmt.Sprintf(k8sProbeTemplate, "liveness", c.port, "/is-alive")
-		cfgMap += c.livenessProbeOptions.generateOptions()
+	if c.LivenessProbe() {
+		cfgMap += fmt.Sprintf(k8sProbeTemplate, "liveness", c.Port(), "/is-alive")
+		cfgMap += generateOptions(log, c.LivenessProbeOptions())
 	}
 
-	if c.readinessProbe {
-		cfgMap += fmt.Sprintf(k8sProbeTemplate, "readiness", c.port, "/is-ready")
-		cfgMap += c.readinessProbeOptions.generateOptions()
+	if c.ReadinessProbe() {
+		cfgMap += fmt.Sprintf(k8sProbeTemplate, "readiness", c.Port(), "/is-ready")
+		cfgMap += generateOptions(log, c.ReadinessProbeOptions())
 	}
 
-	if c.startupProbe {
-		cfgMap += fmt.Sprintf(k8sProbeTemplate, "startup", c.port, "/is-ready")
-		cfgMap += c.startupProbeOptions.generateOptions()
+	if c.StartupProbe() {
+		cfgMap += fmt.Sprintf(k8sProbeTemplate, "startup", c.Port, "/is-ready")
+		cfgMap += generateOptions(log, c.StartupProbeOptions())
 	}
 
 	return
