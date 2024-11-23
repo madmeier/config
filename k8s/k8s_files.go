@@ -17,7 +17,7 @@ func GenerateK8SFiles(log *slog.Logger, c *config.SvcConfig, path string) {
 }
 
 func generateFile(log *slog.Logger, c *config.SvcConfig, path string, fileType string, content string) {
-	fileName := path + "/" + c.ServiceName() + "_" + fileType + ".yaml"
+	fileName := path + "/" + c.Name() + "_" + fileType + ".yaml"
 
 	err := os.MkdirAll(path, os.ModePerm)
 	if err != nil {

@@ -1,19 +1,13 @@
-package k8sconfig
+package sample
 
 import (
 	"log/slog"
-	"os"
-	"testing"
 
 	"github.com/blueorb/config/config"
-	"github.com/blueorb/config/k8s"
 )
 
-func TestConfig(t *testing.T) {
-	log := slog.New(slog.NewJSONHandler(os.Stdout, nil))
-	slog.SetDefault(log)
-
-	config := config.NewConfig(
+func MicroServiceConfig(log *slog.Logger) (svc *config.SvcConfig) {
+	return config.NewConfig(
 		log,
 		"mirco",
 		8000,
@@ -53,8 +47,4 @@ func TestConfig(t *testing.T) {
 			"FeatureTwo", "enabled",
 		),
 	)
-
-	path := "." + string(os.PathSeparator) + "config"
-
-	k8s.GenerateK8SFiles(log, config, path)
 }

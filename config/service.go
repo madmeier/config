@@ -36,35 +36,33 @@ type ProbeOptions struct {
 type SvcConfig struct {
 	// name of the service
 	serviceName string
-	port        int32 // required
-	// uses sandbox if not specified
-	environment string
+	// port to expose
+	port int32 // required
 	// uses default if not specified
 	namespace string
 	// service account to use
 	serviceAccount string
 	// docker image to use
 	image string
-	// environment variables with default value
-	environmentVariables  map[string]string
+	// environment variables with as generic default value
+	environmentVariables map[string]string
+	// a readiness probe is used to determine if a container is ready to start accepting traffic
 	readinessProbe        bool
 	readinessProbeOptions *ProbeOptions
-	livenessProbe         bool
-	livenessProbeOptions  *ProbeOptions
-	startupProbe          bool
-	startupProbeOptions   *ProbeOptions
+	// a liveness probe is used to determine if a container is still running
+	livenessProbe        bool
+	livenessProbeOptions *ProbeOptions
+	// a startup probe is used to determine if a container is ready to start accepting traffic
+	startupProbe        bool
+	startupProbeOptions *ProbeOptions
 }
 
-func (c *SvcConfig) ServiceName() string {
+func (c *SvcConfig) Name() string {
 	return c.serviceName
 }
 
 func (c *SvcConfig) Port() int32 {
 	return c.port
-}
-
-func (c *SvcConfig) Environment() string {
-	return c.environment
 }
 
 func (c *SvcConfig) Namespace() string {
@@ -162,7 +160,6 @@ func getDefaultSvcConfig(serviceName string, servicePort int32, imageName string
 	return &SvcConfig{
 		serviceName:          serviceName,
 		port:                 servicePort,
-		environment:          "sb",
 		namespace:            "default",
 		serviceAccount:       "default",
 		environmentVariables: map[string]string{},
