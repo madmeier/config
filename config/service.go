@@ -85,7 +85,7 @@ func (c *SvcConfig) Image() string {
 	return c.image
 }
 
-func (c *SvcConfig) EnvironmentVariables() map[string]string {
+func (c *SvcConfig) EnvironmentVariables() map[string]ValueOptions {
 	return c.serviceMap.Properties()
 }
 
@@ -115,7 +115,7 @@ func (c *SvcConfig) StartupProbeOptions() *ProbeOptions {
 
 func WithEnvironmentVariable(name string, defaultValue string) ConfigOption {
 	return func(s *SvcConfig) {
-		s.serviceMap.Set(name, defaultValue)
+		s.serviceMap.Add(name, WithDefaultValue(defaultValue))
 	}
 }
 

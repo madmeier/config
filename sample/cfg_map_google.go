@@ -8,7 +8,7 @@ import (
 
 func GoogleProjectMap(log *slog.Logger) (cfgMap *config.Map) {
 	cfgMap = config.NewMap("google")
-	cfgMap.Set("GOOGLE_PROJECT_ID", "blueorb")
-	cfgMap.Set("GOOGLE_APPLICATION_CREDENTIALS", "blueorb") // secret
+	cfgMap.Add("GOOGLE_PROJECT_ID", config.WithDefaultValue("blueorb"))
+	cfgMap.Add("GOOGLE_PROJECT_NAME", config.WithDefaultValue("blueorb.json"))
 	return
 }

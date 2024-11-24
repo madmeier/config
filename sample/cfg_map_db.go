@@ -8,7 +8,7 @@ import (
 
 func DatabaseMap(log *slog.Logger) (cfgMap *config.Map) {
 	cfgMap = config.NewMap("database")
-	cfgMap.Set("DB_CONNECTION_HOST", "blueorb")
-	cfgMap.Set("DB_CREDENTIALS", "blueorb") // secret
+	cfgMap.Add("DB_CORE_CONNECTION_HOST", config.WithDefaultValue("localhost"))
+	cfgMap.Add("DB_CORE_CREDENTIALS", config.WithSecretRef(SecretsDatabaseConnections, SecretsCoreDatabaseConnection))
 	return
 }
