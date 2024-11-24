@@ -33,6 +33,11 @@ type ProbeOptions struct {
 	TerminationGracePeriodSeconds int32
 }
 
+type ConfigMapOptions struct {
+	// name of the config map
+	configMapName string
+}
+
 type SvcConfig struct {
 	// name of the service
 	serviceName string
@@ -44,8 +49,11 @@ type SvcConfig struct {
 	serviceAccount string
 	// docker image to use
 	image string
-	// environment variables with as generic default value
-	environmentVariables map[string]string
+	// the map of the service
+	serviceMap *Map
+	// used config maps
+	configMaps []*ConfigMapOptions
+
 	// a readiness probe is used to determine if a container is ready to start accepting traffic
 	readinessProbe        bool
 	readinessProbeOptions *ProbeOptions
@@ -78,7 +86,7 @@ func (c *SvcConfig) Image() string {
 }
 
 func (c *SvcConfig) EnvironmentVariables() map[string]string {
-	return c.environmentVariables
+	return c.serviceMap.Properties()
 }
 
 func (c *SvcConfig) ReadinessProbe() bool {
@@ -107,7 +115,7 @@ func (c *SvcConfig) StartupProbeOptions() *ProbeOptions {
 
 func WithEnvironmentVariable(name string, defaultValue string) ConfigOption {
 	return func(s *SvcConfig) {
-		s.environmentVariables[name] = defaultValue
+		s.serviceMap.Set(name, defaultValue)
 	}
 }
 
@@ -150,6 +158,16 @@ func WithStartupProbe(probeOptions ...ProbeOptions) ConfigOption {
 	}
 }
 
+func WithConfigMap(configMapName string) ConfigOption {
+	return func(s *SvcConfig) {
+		s.configMaps = append(s.configMaps,
+			&ConfigMapOptions{
+				configMapName: configMapName,
+			},
+		)
+	}
+}
+
 func WithSvcImage(image string) ConfigOption {
 	return func(s *SvcConfig) {
 		s.image = image
@@ -158,12 +176,12 @@ func WithSvcImage(image string) ConfigOption {
 
 func getDefaultSvcConfig(serviceName string, servicePort int32, imageName string) *SvcConfig {
 	return &SvcConfig{
-		serviceName:          serviceName,
-		port:                 servicePort,
-		namespace:            "default",
-		serviceAccount:       "default",
-		environmentVariables: map[string]string{},
-		image:                imageName,
+		serviceName:    serviceName,
+		port:           servicePort,
+		namespace:      "default",
+		serviceAccount: "default",
+		serviceMap:     NewMap(serviceName + "_map"),
+		image:          imageName,
 	}
 }
 

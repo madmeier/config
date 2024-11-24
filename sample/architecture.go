@@ -17,6 +17,10 @@ func defineArchitecture(log *slog.Logger) (arch *config.ArchConfig) {
 	// define namespaces
 	arch.RegisterNameSpace(log, NamespaceBlueOrb(log))
 
+	// define re-usable config maps
+	arch.RegisterConfigMap(log, GoogleProjectMap(log))
+	arch.RegisterConfigMap(log, DatabaseMap(log))
+
 	// define environments
 	arch.RegisterEnvironment(log, SandboxEnvironment(log))
 	arch.RegisterEnvironment(log, ProductionEnvironment(log))

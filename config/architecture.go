@@ -21,6 +21,8 @@ type ArchConfig struct {
 	environments map[string]*EnvConfig
 	// services in the architecture
 	services map[string]*SvcConfig
+	// config maps in the architecture
+	configMaps map[string]*Map
 
 	// collect errors during architecture definition
 	errors []error
@@ -69,6 +71,10 @@ func (a *ArchConfig) RegisterEnvironment(log *slog.Logger, env *EnvConfig) (err 
 
 func (a *ArchConfig) RegisterService(log *slog.Logger, svc *SvcConfig) (err error) {
 	return registerNamedConfig(log, a, a.services, svc)
+}
+
+func (a *ArchConfig) RegisterConfigMap(log *slog.Logger, m *Map) (err error) {
+	return registerNamedConfig(log, a, a.configMaps, m)
 }
 
 func NewArchConfig(name string) *ArchConfig {

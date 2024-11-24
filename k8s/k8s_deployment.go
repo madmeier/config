@@ -55,7 +55,7 @@ func generateK8SDeployment(log *slog.Logger, c *config.SvcConfig) (cfgMap string
 	}
 
 	if c.StartupProbe() {
-		cfgMap += fmt.Sprintf(k8sProbeTemplate, "startup", c.Port, "/is-ready")
+		cfgMap += fmt.Sprintf(k8sProbeTemplate, "startup", c.Port(), "/is-ready")
 		cfgMap += generateOptions(log, c.StartupProbeOptions())
 	}
 
