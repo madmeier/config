@@ -186,7 +186,13 @@ func extractServiceOptions(
 	return
 }
 
-func NewConfig(log *slog.Logger, serviceName string, servicePort int32, imageName string, options ...ConfigOption) (config *SvcConfig) {
+func NewConfig(
+	log *slog.Logger,
+	serviceName string,
+	servicePort int32,
+	imageName string,
+	options ...ConfigOption,
+) (config *SvcConfig) {
 	config = extractServiceOptions(log, serviceName, servicePort, imageName, options...)
 	log.Info("config options", "SvcConfig", config)
 	return

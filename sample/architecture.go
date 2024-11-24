@@ -6,9 +6,13 @@ import (
 	"github.com/blueorb/config/config"
 )
 
+const (
+	ArchitectureName = "blueorb"
+)
+
 func defineArchitecture(log *slog.Logger) (arch *config.ArchConfig) {
 	// create the architecture
-	arch = config.NewArchConfig("blueorb")
+	arch = config.NewArchConfig(ArchitectureName)
 
 	// define namespaces
 	arch.RegisterNameSpace(log, NamespaceBlueOrb(log))
