@@ -10,12 +10,15 @@ const (
 	ArchitectureName = "blueorb"
 )
 
-func defineArchitecture(log *slog.Logger) (arch *config.ArchConfig) {
+func DefineArchitecture(log *slog.Logger) (arch *config.ArchConfig) {
 	// create the architecture
 	arch = config.NewArchConfig(ArchitectureName)
 
 	// define namespaces
 	arch.RegisterNameSpace(log, NamespaceBlueOrb(log))
+
+	// define secrets
+	arch.RegisterSecret(log, SecretsDatabase(log))
 
 	// define re-usable config maps
 	arch.RegisterConfigMap(log, GoogleProjectMap(log))

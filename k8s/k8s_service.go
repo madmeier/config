@@ -8,7 +8,7 @@ import (
 )
 
 func generateK8SService(log *slog.Logger, c *config.SvcConfig) (service string) {
-	service = fmt.Sprintf(k8sServiceBaseTemplate, k8sServiceName(c), c.Namespace(), c.Port, k8sAppName(c))
+	service = fmt.Sprintf(k8sServiceBaseTemplate, k8sServiceName(c), c.NameSpace(), c.Port, k8sAppName(c))
 
 	return
 }

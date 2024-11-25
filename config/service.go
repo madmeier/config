@@ -50,7 +50,7 @@ type SvcConfig struct {
 	// docker image to use
 	image string
 	// the map of the service
-	serviceMap *Map
+	serviceMap *ConfigMap
 	// used config maps
 	configMaps []*ConfigMapOptions
 
@@ -73,7 +73,7 @@ func (c *SvcConfig) Port() int32 {
 	return c.port
 }
 
-func (c *SvcConfig) Namespace() string {
+func (c *SvcConfig) NameSpace() string {
 	return c.namespace
 }
 
@@ -180,7 +180,7 @@ func getDefaultSvcConfig(serviceName string, servicePort int32, imageName string
 		port:           servicePort,
 		namespace:      "default",
 		serviceAccount: "default",
-		serviceMap:     NewMap(serviceName + "_map"),
+		serviceMap:     NewConfigMap(serviceName + "_map"),
 		image:          imageName,
 	}
 }
@@ -214,4 +214,7 @@ func NewConfig(
 	config = extractServiceOptions(log, serviceName, servicePort, imageName, options...)
 	log.Info("config options", "SvcConfig", config)
 	return
+}
+
+func (a *ArchConfig) CheckServices(log *slog.Logger) {
 }

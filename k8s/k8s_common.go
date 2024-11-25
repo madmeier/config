@@ -10,6 +10,10 @@ func k8sServiceName(c *config.SvcConfig) string {
 	return c.Name() + "-svc"
 }
 
+func k8sConfigName(c *config.ConfigMap) string {
+	return c.Name() + "-cfg"
+}
+
 func k8sServiceConfigName(c *config.SvcConfig) string {
 	return c.Name() + "-cfg"
 }

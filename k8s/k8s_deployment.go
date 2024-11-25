@@ -35,7 +35,7 @@ func generateK8SDeployment(log *slog.Logger, c *config.SvcConfig) (cfgMap string
 	cfgMap = fmt.Sprintf(
 		k8sDeploymentBaseTemplate,
 		c.Name(),
-		c.Namespace(),
+		c.NameSpace(),
 		c.Port(),
 		c.Image(),
 		c.ServiceAccount(),

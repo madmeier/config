@@ -7,16 +7,13 @@ import (
 	"github.com/blueorb/config/config"
 )
 
-func generateK8SNamespace(log *slog.Logger, c *config.SvcConfig) (namespace string) {
-	namespace = fmt.Sprintf(k8sNameSpaceTemplate, c.Namespace())
+func generateK8SNamespace(log *slog.Logger, env *config.EnvConfig, ns *config.NameSpaceConfig) (namespace string) {
+	namespace = fmt.Sprintf(k8sNameSpaceTemplate, ns.Name())
 
 	return
 }
 
-// 1 k82 service name
-// 2 name_space
-// 3 port
-// 4 app
+// 1 name_space
 const k8sNameSpaceTemplate = `
 apiVersion: v1
 kind: Namespace

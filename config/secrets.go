@@ -1,21 +1,31 @@
 package config
 
-type Secret struct {
-	SecretName string
+import "log/slog"
 
-	SecretKeys []string
+type Secret struct {
+	secretName string
+	nameSpace  string
+	secretKeys []string
 }
 
-func NewSecret(name string) *Secret {
+func NewSecret(name string, nameSpace ...string) *Secret {
 	return &Secret{
-		SecretName: name,
+		nameSpace:  getNameSpace(nameSpace...),
+		secretName: name,
 	}
 }
 
 func (s *Secret) Name() string {
-	return s.SecretName
+	return s.secretName
+}
+
+func (s *Secret) NameSpace() string {
+	return s.nameSpace
 }
 
 func (s *Secret) Add(key string) {
-	s.SecretKeys = append(s.SecretKeys, key)
+	s.secretKeys = append(s.secretKeys, key)
+}
+
+func (a *ArchConfig) CheckSecrets(log *slog.Logger) {
 }

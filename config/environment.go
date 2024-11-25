@@ -1,5 +1,7 @@
 package config
 
+import "log/slog"
+
 type EnvConfig struct {
 	// name of the environment
 	name string
@@ -18,6 +20,13 @@ func (e *EnvConfig) Name() string {
 	return e.name
 }
 
+func (e *EnvConfig) NameSpace() string {
+	return ""
+}
+
 func (e *EnvConfig) Purpose() string {
 	return e.purpose
+}
+
+func (a *ArchConfig) CheckEnvironments(log *slog.Logger) {
 }

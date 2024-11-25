@@ -7,10 +7,10 @@ import (
 	"github.com/blueorb/config/config"
 )
 
-func generateK8SConfigMap(log *slog.Logger, c *config.SvcConfig) (cfgMap string) {
-	cfgMap = fmt.Sprintf(k8sConfigMapBaseTemplate, k8sServiceConfigName(c), c.Namespace())
+func generateK8SConfigMap(log *slog.Logger, env *config.EnvConfig, c *config.ConfigMap) (cfgMap string) {
+	cfgMap = fmt.Sprintf(k8sConfigMapBaseTemplate, k8sConfigName(c), c.NameSpace())
 
-	for k, v := range c.EnvironmentVariables() {
+	for k, v := range c.Properties() {
 		cfgMap += fmt.Sprintf(k8sConfigMapEnvVarTemplate, k, v)
 	}
 

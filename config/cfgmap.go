@@ -1,5 +1,7 @@
 package config
 
+import "log/slog"
+
 type ValueOptions struct {
 	SecretName   string
 	SecretKey    string
@@ -8,24 +10,30 @@ type ValueOptions struct {
 
 type ValueOption func(*ValueOptions)
 
-type Map struct {
-	name string
+type ConfigMap struct {
+	name      string
+	nameSpace string
 	// environment variables with as generic default value
 	properties map[string]ValueOptions
 }
 
-func NewMap(name string) *Map {
-	return &Map{
+func NewConfigMap(name string, namespace ...string) *ConfigMap {
+	return &ConfigMap{
 		name:       name,
+		nameSpace:  getNameSpace(namespace...),
 		properties: map[string]ValueOptions{},
 	}
 }
 
-func (m *Map) Name() string {
+func (m *ConfigMap) Name() string {
 	return m.name
 }
 
-func (m *Map) Properties() map[string]ValueOptions {
+func (m *ConfigMap) NameSpace() string {
+	return m.nameSpace
+}
+
+func (m *ConfigMap) Properties() map[string]ValueOptions {
 	return m.properties
 }
 
@@ -43,7 +51,7 @@ func extractValueOptions(
 	return
 }
 
-func (m *Map) Add(key string, options ...ValueOption) {
+func (m *ConfigMap) Add(key string, options ...ValueOption) {
 	m.properties[key] = extractValueOptions(key, options...)
 }
 
@@ -58,4 +66,7 @@ func WithSecretRef(secretName string, secretKey string) ValueOption {
 		s.SecretName = secretName
 		s.SecretKey = secretKey
 	}
+}
+
+func (a *ArchConfig) CheckConfigMaps(log *slog.Logger) {
 }
