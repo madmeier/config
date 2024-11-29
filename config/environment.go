@@ -2,11 +2,14 @@ package config
 
 import "log/slog"
 
+
 type EnvConfig struct {
 	// name of the environment
 	name string
 	// the purpose
 	purpose string
+
+
 }
 
 func NewEnvConfig(name string, purpose string) *EnvConfig {
@@ -29,4 +32,5 @@ func (e *EnvConfig) Purpose() string {
 }
 
 func (a *ArchConfig) CheckEnvironments(log *slog.Logger) {
+	// intentionally empty
 }

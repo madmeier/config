@@ -1,6 +1,8 @@
 package config
 
-type NamedConfig interface {
+type ArchElement interface {
 	Name() string
 	NameSpace() string
 }
+
+

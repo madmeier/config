@@ -5,7 +5,7 @@ import "log/slog"
 type ValueOptions struct {
 	SecretName   string
 	SecretKey    string
-	DefaultValue string
+	DefaultValue any
 }
 
 type ValueOption func(*ValueOptions)
@@ -38,7 +38,6 @@ func (m *ConfigMap) Properties() map[string]ValueOptions {
 }
 
 func extractValueOptions(
-	key string,
 	options ...ValueOption,
 ) (
 	valueOptions ValueOptions,
@@ -52,10 +51,10 @@ func extractValueOptions(
 }
 
 func (m *ConfigMap) Add(key string, options ...ValueOption) {
-	m.properties[key] = extractValueOptions(key, options...)
+	m.properties[key] = extractValueOptions(options...)
 }
 
-func WithDefaultValue(defaultValue string) ValueOption {
+func WithDefaultValue(defaultValue any) ValueOption {
 	return func(s *ValueOptions) {
 		s.DefaultValue = defaultValue
 	}

@@ -116,8 +116,8 @@ func (a *ArchConfig) ResetErrors() {
 func (a *ArchConfig) Check(log *slog.Logger) (err error) {
 	a.ResetErrors()
 
-	a.CheckNameSpaces(log)
 	a.CheckEnvironments(log)
+	a.CheckNameSpaces(log)
 	a.CheckConfigMaps(log)
 	a.CheckSecrets(log)
 	a.CheckServices(log)
